@@ -32,8 +32,8 @@ vnoremap <C-c> "+y
 noremap <C-v> "+p
 map <C-n> :NERDTreeToggle<CR>
 map <C-s> :w<CR>
-nnoremap <TAB>   :MBEbn<CR>
-noremap <S-TAB> :MBEbp<CR>
+nnoremap <C-TAB>   :MBEbn<CR>
+noremap <C-S-TAB> :MBEbp<CR>
 nnoremap <silent> <A-q> :bd<CR>
 map <F11> <Esc>:call libcallnr("gvimfullscreen.dll", "ToggleFullScreen",0)<CR>
 
@@ -41,13 +41,18 @@ map <F11> <Esc>:call libcallnr("gvimfullscreen.dll", "ToggleFullScreen",0)<CR>
 call plug#begin()
 Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-surround'
+Plug 'tpope/vim-dispatch'
 Plug 'bling/vim-airline'
+Plug 'omnisharp/omnisharp-vim'
+Plug 'OrangeT/vim-csharp'
+Plug 'fholgado/minibufexpl.vim'
+"visit omnisharp/YCM page for additional info how to build & config
 Plug 'moll/vim-node', { 'for': 'javascript'}
 Plug 'jelera/vim-javascript-syntax', { 'for': 'javascript'}
 Plug 'ejamesc/JavaScript-Indent', { 'for': 'javascript'}
 Plug 'othree/javascript-libraries-syntax.vim', { 'for': 'javascript'}
 Plug 'mattn/emmet-vim', { 'for': ['html','xml']}
-Plug 'kien/ctrlp.vim', { 'on': ['CtrlP','CtrlPbuffer','CtrlPMixed']}
+Plug 'kien/ctrlp.vim'
 Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
 Plug 'godlygeek/tabular', { 'on': ['Tab','Tabularize']}
 function! BuildTern(info)
@@ -55,46 +60,35 @@ function! BuildTern(info)
     !npm install
   endif
 endfunction
-Plug 'ternjs/tern_for_vim', { 'do': function('BuildTern')}
+
+function! BuildYCM(info)
+  if a:info.status == 'installed' || a:info.force
+    !./install.py --omnisharp--completer
+  endif
+endfunction
+Plug 'ternjs/tern_for_vim', { 'do': function('BuildTern')} 
+Plug 'valloric/youcompleteme', { 'do': function('BuildYCM'),'on': [] }
+"only load youcompleteme on entering insert mode:
+augroup load_us_ycm
+  autocmd!
+  autocmd InsertEnter * call plug#load('youcompleteme')
+                     \| call youcompleteme#Enable() | autocmd! load_us_ycm
+augroup END
 call plug#end()
 
 filetype plugin indent on 
 let g:user_emmet_leader_key='<C-Y>'
-let g:ctrlp_map = '<C-p>'
 let g:miniBufExplCycleArround=1
 let g:airline_theme="wombat"
 let g:airline_powerline_fonts=1
 let g:used_javascript_libs = 'jquery,angularjs,angularui,angularuirouter,jasmine'
+let g:ctrl_pmap = '<c-p>'
+let g:ctrl_cmd = 'CtrlP'
+let g:plug_timeout = 120 "Workaround for timeout when installing YCM
 set noshowmode
 
-function! s:DiffWithSaved()
-  let filetype=&ft
-  diffthis
-  vnew | r # | normal! 1Gdd
-  diffthis
-  exe "setlocal bt=nofile bh=wipe nobl noswf ro ft=" . filetype
-endfunction
-com! DiffSaved call s:DiffWithSaved()
-
-if &diff
-        " equalize size of diffed file windows
-        au VimResized * :execute "normal! \<C-W>="
-
-        " toggle diff font
-        function! DiffSmallFont1()
-                set guifont=-misc-fixed-medium-r-normal--9-90-75-75-c-60-iso10646-1
-                map :call DiffSmallFont2()<CR>
-        endfunction
-        function! DiffSmallFont2()
-                set guifont=-misc-fixed-medium-r-normal--10-100-75-75-c-60-iso10646-1
-                map <F5> :call DiffSmallFont3()<CR>
-        endfunction
-        function! DiffSmallFont3()
-                set guifont=-misc-fixed-medium-r-normal--13-120-75-75-c-70-iso10646-1
-                map <F5> :call DiffSmallFont1()<CR>
-        endfunction
-        call DiffSmallFont2()
-endif
+"omnicomplete
+set splitbelow
 
 set ssop-=options    " do not store global and local values in a session
 set ssop-=folds      " do not store folds
