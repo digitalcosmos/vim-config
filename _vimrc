@@ -7,7 +7,7 @@ set pastetoggle =<F11>
 set lines=50 columns=130
 filetype indent on
 set directory=.,$TMP,$TEMP
-set backupdir=~/vimfiles/backup
+set backupdir=~/vimfiles/backup "dont forget to create the folder
 
 "appearance
 set guioptions-=m
@@ -19,7 +19,6 @@ set visualbell
 set incsearch
 
 set background=dark
-colorscheme codeschool
 set guifont=Dina:h9:cANSI
 "set colorcolumn=80
 set relativenumber
@@ -32,8 +31,9 @@ vnoremap <C-c> "+y
 noremap <C-v> "+p
 map <C-n> :NERDTreeToggle<CR>
 map <C-s> :w<CR>
-nnoremap <C-TAB>   :MBEbn<CR>
-noremap <C-S-TAB> :MBEbp<CR>
+nnoremap <TAB>   :MBEbn<CR>
+noremap <S-TAB> :MBEbp<CR>
+noremap <A-Q> :MBEbd<CR>
 nnoremap <silent> <A-q> :bd<CR>
 map <F11> <Esc>:call libcallnr("gvimfullscreen.dll", "ToggleFullScreen",0)<CR>
 
@@ -42,6 +42,9 @@ call plug#begin()
 Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-dispatch'
+Plug 'altercation/vim-colors-solarized'
+Plug 'leafgarland/typescript-vim'
+Plug 'clausreinke/typescript-tools.vim'
 Plug 'bling/vim-airline'
 Plug 'omnisharp/omnisharp-vim'
 Plug 'OrangeT/vim-csharp'
@@ -79,6 +82,7 @@ call plug#end()
 filetype plugin indent on 
 let g:user_emmet_leader_key='<C-Y>'
 let g:miniBufExplCycleArround=1
+"let g:miniBufExplBRSplit = 0
 let g:airline_theme="wombat"
 let g:airline_powerline_fonts=1
 let g:used_javascript_libs = 'jquery,angularjs,angularui,angularuirouter,jasmine'
@@ -87,8 +91,8 @@ let g:ctrl_cmd = 'CtrlP'
 let g:plug_timeout = 120 "Workaround for timeout when installing YCM
 set noshowmode
 
-"omnicomplete
-set splitbelow
+set splitright
 
 set ssop-=options    " do not store global and local values in a session
 set ssop-=folds      " do not store folds
+colorscheme solarized
