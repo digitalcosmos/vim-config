@@ -2,7 +2,6 @@ set hidden
 set hlsearch
 set ignorecase
 set smartcase
-:cd ~
 set noswapfile
 set nobackup
 set encoding=utf-8
@@ -30,13 +29,18 @@ nnoremap <TAB>   :bn<CR>
 noremap <S-TAB> :bp<CR>
 nnoremap <silent> <A-q> :bd<CR>
 nnoremap <C-p> :FuzzyOpen<CR>
+nnoremap <C-,> :FuzzyOpen<CR>
+nnoremap ,cd :cd %:p:h<CR>:pwd<CR>
 
 "plugins
 call plug#begin()
 Plug 'tpope/vim-sensible'
+Plug 'tpope/vim-commentary'
+Plug 'akz92/vim-ionic2'
 Plug 'tpope/vim-surround'
 Plug 'ternjs/tern_for_vim'
 Plug 'cloudhead/neovim-fuzzy'
+"Plug 'ctrlpvim/ctrlp.vim'
 Plug 'junegunn/seoul256.vim'
 Plug 'leafgarland/typescript-vim'
 Plug 'Shougo/vimproc.vim', {'do' : 'make'}
@@ -54,8 +58,8 @@ Plug 'jelera/vim-javascript-syntax', { 'for': 'javascript'}
 Plug 'ejamesc/JavaScript-Indent', { 'for': 'javascript'}
 Plug 'othree/javascript-libraries-syntax.vim', { 'for': 'javascript'}
 Plug 'mattn/emmet-vim', { 'for': ['html','xml']}
-Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
 Plug 'scrooloose/syntastic'
+Plug 'janko-m/vim-test'
 Plug 'godlygeek/tabular', { 'on': ['Tab','Tabularize']}
 call plug#end()
 
@@ -64,6 +68,8 @@ let g:airline_theme="wombat"
 let g:airline_powerline_fonts=1
 let g:airline#extensions#tabline#enabled = 1
 let g:airline_powerline_fonts = 1
+"let g:ctrlp_map = '<c-p>'
+"let g:ctrlp_cmd = 'CtrlP'
 set noshowmode
 "Preview autocomplete window:
 set splitbelow
@@ -89,9 +95,8 @@ let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
 let g:syntastic_aggregate_errors = 1
+let g:syntastic_typescript_tsc_args = "--experimentalDecorators"
 set t_Co=256
-let g:netrw_browse_split = 4
-let g:netrw_altv = 1
 
 " deoplete tab-complete
 inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
@@ -101,3 +106,15 @@ autocmd FileType typescript JsPreTmpl html
 "syntastic integration
 let g:tsuquyomi_disable_quickfix = 1
 let g:syntastic_typescript_checkers = ['tsuquyomi', 'tslint']
+"stuff I found on the internet
+" Display extra whitespace
+set list listchars=tab:»·,trail:·,nbsp:·
+" Switch between the last two files
+nnoremap <leader><leader> <c-^>
+
+" vim-test mappings
+nnoremap <silent> <Leader>t :TestFile<CR>
+nnoremap <silent> <Leader>s :TestNearest<CR>
+nnoremap <silent> <Leader>l :TestLast<CR>
+nnoremap <silent> <Leader>a :TestSuite<CR>
+nnoremap <silent> <leader>gt :TestVisit<CR>
